@@ -1,16 +1,42 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
-from .utils import query_bill
+from .rabbit import send_rabbit_message
+from .schemas import MessageToProcessPayment, PayBillRequest, ReadBillResponse
+from .utils import get_account_data, query_bill
 
 router = APIRouter()
 
 
-# @router.post("/bills/")
-# def create_bill(bill: Bill):
-#     return bill
+@router.post("/bill/pay")
+def pay_bill(bill: PayBillRequest):
+    bill_data = query_bill(billId=bill.billId)
+    amount_bill = bill_data.get("amount", 0)
+    account_data = get_account_data(account_id=bill.client_account_id)
+    balance = account_data.get("balance", 0)
+
+    has_enough_money = balance > amount_bill
+
+    client_id = account_data.get("client_id", None)
+
+    if bill_data.get("billId", 0) != bill.billId:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    if not has_enough_money:
+        raise HTTPException(status_code=404, detail="Not enough money")
+
+    message = MessageToProcessPayment(
+        billId=bill.billId,
+        amount=amount_bill,
+        client_account_id=client_id,
+    ).dict()
+
+    # Publicar mensaje en la cola
+    send_rabbit_message(message)
+
+    return {"transaction_state": "pending"}
 
 
 @router.get("/bill/{billId}")
 def read_bill(billId: int):
-    response = query_bill(billId=billId)
-    return response
+    data_bill = query_bill(billId=billId)
+    data_bill = ReadBillResponse(**data_bill)
+    return data_bill
