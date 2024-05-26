@@ -16,13 +16,13 @@ services:
       context: payments_manager
       dockerfile: Dockerfile
     ports:
-      - "8010:80"
-      - "8888:8888"
+      - "8010:8010"
+      # - "8888:8888"
     volumes:
       - ./payments_manager:/app/payments_manager
     env_file:
       - .env
-    command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","payments_manager.main:app","--host","0.0.0.0","--port","80","--reload"] # debugpy
+    command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
     depends_on:
       - db
     networks:
@@ -44,6 +44,25 @@ services:
       - rabbitmq
     networks:
       - exam
+
+  clients_microservice:
+    build: 
+      context: clients_microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8012:8012"
+      - "8888:8888"
+    volumes:
+      - ./clients_microservice:/app/clients_microservice
+    env_file:
+      - .env
+    command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","clients_microservice.main:app","--host","0.0.0.0","--port","8012","--reload"] # debugpy
+    # command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8012", "--reload"]
+    depends_on:
+      - db
+    networks:
+      - exam
+
 
   payments_dispatcher:
     build: 
