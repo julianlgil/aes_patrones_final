@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends
-from sqlmodel import Session
+from fastapi import APIRouter, Depends, Query
+from sqlmodel import Session, select
 
 from .database import get_session
 from .models import Bill
@@ -17,7 +17,19 @@ def create_bill(bill: Bill, session: Session = Depends(get_session)):
 
 @router.get("/bills/{bill_id}")
 def read_bill(bill_id: int, session: Session = Depends(get_session)):
+    print("** ** ** bill_id 2 ** ** **", bill_id)
+
     return session.get(Bill, bill_id)
+
+
+@router.get("/bills/", response_model=list[Bill])
+def read_all_bills(
+    session: Session = Depends(get_session),
+    offset: int = 0,
+    limit: int = Query(default=100, le=100),
+):
+    bills = session.exec(select(Bill).offset(offset).limit(limit)).all()
+    return bills
 
 
 @router.put("/bills/{bill_id}")

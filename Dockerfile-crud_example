@@ -1,9 +1,0 @@
-FROM tiangolo/uvicorn-gunicorn-fastapi:python3.9
-
-WORKDIR /app
-COPY ./crud_example /app/crud_example
-
-RUN pip install sqlmodel
-RUN pip install -r crud_example/requirements.txt
-
-CMD ["uvicorn", "crud_example.main:app", "--host", "0.0.0.0", "--port", "80"]

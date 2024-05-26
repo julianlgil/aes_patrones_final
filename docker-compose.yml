@@ -13,14 +13,16 @@ services:
   
   crud_example:
     build: 
-      context: .
+      context: crud_example
       dockerfile: Dockerfile-crud_example
     ports:
       - "8000:80"
+      - "8888:8888"
     volumes:
-      - ./crud_example:/crud_example
+      - ./crud_example:/app/crud_example
     env_file:
       - .env
+    command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","crud_example.main:app","--host","0.0.0.0","--port","80","--reload"]
     depends_on:
       - db
     networks:
