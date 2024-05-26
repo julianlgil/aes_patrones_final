@@ -14,8 +14,8 @@
             },
             "pathMappings": [
                 {
-                    "localRoot": "${workspaceFolder}/crud_example/",
-                    "remoteRoot": "/app/crud_example/"
+                    "localRoot": "${workspaceFolder}/payments_manager/",
+                    "remoteRoot": "/app/payments_manager/"
                 }
             ]
         }
