@@ -1,12 +1,11 @@
-import json
 import os
 from typing import Dict, Optional
 
 import requests
 
 from providers_dispatcher.jslt.jslt_jsonata import transform_json
-from web_service_clients.models import RequestInfo
-from web_service_clients.supported_webservice_clients import SupportedWebserviceClients
+from providers_dispatcher.web_service_clients.models import RequestInfo
+from providers_dispatcher.web_service_clients.supported_webservice_clients import SupportedWebserviceClients
 
 
 def get_provider(provider_id) -> Dict:

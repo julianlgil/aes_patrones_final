@@ -1,9 +1,9 @@
 from enum import Enum
 from typing import Any
 
-from web_service_clients.rest_client import RestClient
-from web_service_clients.soap_client import SoapClient
-from web_service_clients.webservice_client import WebserviceClient
+from providers_dispatcher.web_service_clients.rest_client import RestClient
+from providers_dispatcher.web_service_clients.soap_client import SoapClient
+from providers_dispatcher.web_service_clients.webservice_client import WebserviceClient
 
 
 class SupportedWebserviceClients(Enum):

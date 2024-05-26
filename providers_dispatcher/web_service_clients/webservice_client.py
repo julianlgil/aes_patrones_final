@@ -1,6 +1,4 @@
-from typing import Dict
-
-from web_service_clients.models import RequestInfo
+from providers_dispatcher.web_service_clients.models import RequestInfo
 
 
 class WebserviceClient:

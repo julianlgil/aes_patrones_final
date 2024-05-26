@@ -3,8 +3,8 @@ from typing import Dict
 from zeep import Client
 from zeep.plugins import HistoryPlugin
 
-from web_service_clients.models import RequestInfo
-from web_service_clients.webservice_client import WebserviceClient
+from providers_dispatcher.web_service_clients.models import RequestInfo
+from providers_dispatcher.web_service_clients.webservice_client import WebserviceClient
 
 
 class SoapClient(WebserviceClient):
