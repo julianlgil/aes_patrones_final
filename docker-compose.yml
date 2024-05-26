@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_PASSWORD: aes
+      POSTGRES_USER: postgres
+      POSTGRES_DB: aes_data
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: db
+    volumes:
+      - postgres_data1:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres_data1:

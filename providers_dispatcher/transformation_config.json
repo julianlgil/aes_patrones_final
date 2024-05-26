@@ -1,0 +1,17 @@
+{
+  "get_invoice": {
+    "path_operation": "FindPerson",
+    "path_params": {},
+    "payload": {
+      "id": $.invoice_reference
+}
+},
+"pay_invoice": {
+    "path_operation": "AddInteger",
+    "path_params": {},
+    "payload": {
+      "Arg1": $.payment_amount,
+      "Arg2": $.payment_amount
+    }
+}
+}
