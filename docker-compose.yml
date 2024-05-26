@@ -28,6 +28,22 @@ services:
     networks:
       - exam
 
+  accounts_microservice:
+    build: 
+      context: accounts_microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8013:8013"
+    volumes:
+      - ./accounts_microservice:/app/accounts_microservice
+    env_file:
+      - .env
+    command: ["uvicorn", "accounts_microservice.main:app", "--host", "0.0.0.0", "--port", "8013", "--reload"]
+    depends_on:
+      - db
+    networks:
+      - exam
+
   payments_dispatcher:
     build: 
       context: payments_dispatcher
