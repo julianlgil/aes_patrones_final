@@ -1,19 +1,32 @@
-version: '3.8'
-
 services:
   db:
     image: postgres:13
     container_name: postgres_db
-    environment:
-      POSTGRES_PASSWORD: aes
-      POSTGRES_USER: postgres
-      POSTGRES_DB: aes_data
-      POSTGRES_PORT: 5432
-      POSTGRES_HOST: db
+    env_file:
+      - .env
     volumes:
-      - postgres_data1:/var/lib/postgresql/data
+      - ./volumes/postgresql_data:/var/lib/postgresql/data/
     ports:
       - 5432:5432
+    networks:
+      - exam
+  
+  crud_example:
+    build: 
+      context: .
+      dockerfile: Dockerfile-crud_example
+    ports:
+      - "8000:80"
+    volumes:
+      - ./crud_example:/crud_example
+    env_file:
+      - .env
+    depends_on:
+      - db
+    networks:
+      - exam
 
-volumes:
-  postgres_data1:
+networks:
+  exam:
+    driver: bridge
+    #external: true
