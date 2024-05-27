@@ -1,3 +1,4 @@
+import os
 from decimal import Decimal
 
 import requests
@@ -14,7 +15,8 @@ default_headers = {
 def is_account_unblocked(account_id):
     """El objetivo es saber si la cuenta esta desbloqueada. Ajustar
     Si esta bloqueada, debe devolver un error"""
-    host = "accounts_microservice"
+    accounts_microservice_host = os.environ.get("ACCOUNTS_MICROSERVICE_HOST")
+    host = accounts_microservice_host
     balance_url = f"http://{host}:8013/accounts/{account_id}"
     balance_headers = default_headers
     response = invoke_get_endpoint(url=balance_url, headers=balance_headers)
@@ -27,7 +29,8 @@ def is_account_unblocked(account_id):
 
 def change_block_account(account_id: int, action: str = "block"):
     """El objetivo es bloquear la cuenta. Ajustar"""
-    host = "accounts_microservice"
+    accounts_microservice_host = os.environ.get("ACCOUNTS_MICROSERVICE_HOST")
+    host = accounts_microservice_host
     balance_url = f"http://{host}:8013/accounts/{account_id}"
     balance_headers = default_headers
     payload = {"state": action}
@@ -38,7 +41,8 @@ def change_block_account(account_id: int, action: str = "block"):
 
 
 def create_payment_transaction(source, target, amount, description):
-    host = "transactions_microservice"
+    transactions_microservice_host = os.environ.get("TRANSACTIONS_MICROSERVICE_HOST")
+    host = transactions_microservice_host
     balance_url = f"http://{host}:8021/transactions"
     balance_headers = default_headers
     payload = {
@@ -55,7 +59,8 @@ def create_payment_transaction(source, target, amount, description):
 
 
 def change_balance_account(account_id, amount, action):
-    host = "accounts_microservice"
+    accounts_microservice_host = os.environ.get("ACCOUNTS_MICROSERVICE_HOST")
+    host = accounts_microservice_host
     balance_url = f"http://{host}:8013/accounts/{account_id}"
     balance_headers = default_headers
     payload = {"balance": {"action": action, "amount": amount}}
@@ -132,7 +137,8 @@ def invoke_patch_endpoint(
 
 
 def dispatch_query_bill(billId: int):
-    host = "payments_dispatcher"
+    payments_dispatcher_host = os.environ.get("PAYMENTS_DISPATCHER_HOST")
+    host = payments_dispatcher_host
     dispatch_url = f"http://{host}:8011/providers/bill/{billId}"
     distpatch_headers = default_headers
     response = invoke_get_endpoint(url=dispatch_url, headers=distpatch_headers)
@@ -142,7 +148,8 @@ def dispatch_query_bill(billId: int):
 
 
 def dispatch_pay_bill(billId: int, data: DispatchPayBillRequest):
-    host = "payments_dispatcher"
+    payments_dispatcher_host = os.environ.get("PAYMENTS_DISPATCHER_HOST")
+    host = payments_dispatcher_host
     dispatch_url = f"http://{host}:8011/providers/bill/{billId}"
     distpatch_payload = {"amount": data.get("amount"), "paid": False}
     distpatch_headers = default_headers
@@ -155,7 +162,8 @@ def dispatch_pay_bill(billId: int, data: DispatchPayBillRequest):
 
 
 def get_account_data(account_id):
-    host = "accounts_microservice"
+    accounts_microservice_host = os.environ.get("ACCOUNTS_MICROSERVICE_HOST")
+    host = accounts_microservice_host
     balance_url = f"http://{host}:8013/account/{account_id}"
     balance_headers = default_headers
     response = invoke_get_endpoint(url=balance_url, headers=balance_headers)

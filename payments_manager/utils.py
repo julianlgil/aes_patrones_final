@@ -1,3 +1,5 @@
+import os
+
 import requests
 from fastapi import HTTPException
 
@@ -20,7 +22,8 @@ def invoke_get_endpoint(url: str, headers: dict = default_headers) -> requests.R
 
 
 def query_bill(billId):
-    host = "payments_dispatcher"
+    payments_dispatcher_host = os.environ.get("PAYMENTS_DISPATCHER_HOST")
+    host = payments_dispatcher_host
     dispatch_url = f"http://{host}:8011/providers/bill/{billId}"
     distpatch_headers = default_headers
     response = invoke_get_endpoint(url=dispatch_url, headers=distpatch_headers)
@@ -30,7 +33,8 @@ def query_bill(billId):
 
 
 def get_account_data(account_id):
-    host = "accounts_microservice"
+    accounts_microservice_host = os.environ.get("ACCOUNTS_MICROSERVICE_HOST")
+    host = accounts_microservice_host
     balance_url = f"http://{host}:8013/accounts/{account_id}"
     balance_headers = default_headers
     response = invoke_get_endpoint(url=balance_url, headers=balance_headers)
