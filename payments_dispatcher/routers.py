@@ -5,14 +5,27 @@ from .schemas import DispatchRequest
 router = APIRouter()
 
 
-@router.post("/dispatch")
-def read_bill(request: DispatchRequest):
+@router.post("/providers/bill/{bill_reference}")
+def pay_bill(bill_reference: str, request: DispatchRequest):
     response = {
-        "billId": request.billId,
         "amount": 250000,
-        "action": request.action,
-        "provider_transaction_id": 2000,
-        "provider_transaction_state": "success",
-        "provider_client_id": 31245,
+        "paid": True,
+        "id": bill_reference,
+        "provider_id": "698465",
+        "provider_account_id": "1",
+        "operation": "pay_bill",
+    }
+    return response
+
+
+@router.get("/providers/bill/{bill_reference}")
+def read_bill(bill_reference: str):
+    response = {
+        "amount": 250000,
+        "paid": False,
+        "id": bill_reference,
+        "provider_id": "698465",
+        "provider_account_id": "1",
+        "operation": "get_bill",
     }
     return response

@@ -1,6 +1,6 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class DispatchRequest(BaseModel):
-    billId: int
-    action: str = Field(..., regex="^(query|pay)$")
+    amount: int
+    paid: bool

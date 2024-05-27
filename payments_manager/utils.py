@@ -21,12 +21,9 @@ def invoke_get_endpoint(url: str, headers: dict = default_headers) -> requests.R
 
 def query_bill(billId):
     host = "payments_dispatcher"
-    dispatch_url = f"http://{host}:8011/dispatch"
-    distpatch_payload = {"billId": billId, "action": "query"}
+    dispatch_url = f"http://{host}:8011/providers/bill/{billId}"
     distpatch_headers = default_headers
-    response = invoke_post_endpoint(
-        url=dispatch_url, payload=distpatch_payload, headers=distpatch_headers
-    )
+    response = invoke_get_endpoint(url=dispatch_url, headers=distpatch_headers)
     if int(int(response.status_code / 100)) != 2:  # 2xx
         raise HTTPException(status_code=400, detail=f"Error endpoint: {host} ")
     return response.json()
@@ -34,7 +31,7 @@ def query_bill(billId):
 
 def get_account_data(account_id):
     host = "accounts_microservice"
-    balance_url = f"http://{host}:8013/account/{account_id}"
+    balance_url = f"http://{host}:8013/accounts/{account_id}"
     balance_headers = default_headers
     response = invoke_get_endpoint(url=balance_url, headers=balance_headers)
     if int(int(response.status_code / 100)) != 2:  # 2xx
