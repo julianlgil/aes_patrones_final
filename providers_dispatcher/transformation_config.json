@@ -1,12 +1,12 @@
 {
-  "get_invoice": {
+  "get_bill_request": {
     "path_operation": "FindPerson",
     "path_params": {},
     "payload": {
-      "id": $.invoice_reference
+      "id": $.bill_reference
 }
 },
-"pay_invoice": {
+"pay_bill_request": {
     "path_operation": "AddInteger",
     "path_params": {},
     "payload": {

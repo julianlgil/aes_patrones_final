@@ -2,6 +2,6 @@ from enum import Enum
 
 
 class Operation(Enum):
-    REQUEST_INVOICE = 'request_invoice'
-    REPORT_PAYMENT_INVOICE = 'report_payment_invoice'
+    REQUEST_BILL = 'request_bill'
+    REPORT_PAYMENT_BILL = 'report_payment_bill'
 

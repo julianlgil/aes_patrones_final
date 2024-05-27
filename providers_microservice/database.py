@@ -8,7 +8,8 @@ from databases import Database
 user = os.getenv('POSTGRES_USER')
 password = os.getenv('POSTGRES_PASSWORD')
 providers_db = os.getenv('POSTGRES_DB')
-DATABASE_URL = f"postgresql://{user}:{password}@localhost/{providers_db}"
+host = os.getenv('POSTGRES_HOST')
+DATABASE_URL = f"postgresql://{user}:{password}@{host}/{providers_db}"
 
 database = Database(DATABASE_URL)
 engine = create_engine(DATABASE_URL)
