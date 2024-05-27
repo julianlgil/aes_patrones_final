@@ -16,6 +16,24 @@ def create_account(account: Account, session: Session = Depends(get_session)):
     return account
 
 
+@router.get("/accounts/{account_id}/client/{client_id}")
+def read_account(account_id: int, client_id: int, session: Session = Depends(get_session)):
+    statement = select(Account).where(Account.id == account_id, Account.client_id == client_id)
+    results = session.exec(statement)
+    account = results.first()
+
+    if not account:
+        raise HTTPException(status_code=404, detail="Account not found")
+
+    data_account = ReadAccountResponse(
+        client_id=account.client_id,
+        account_id=account.id,
+        balance=account.balance,
+        state=account.state,
+    )
+    return data_account
+
+
 @router.get("/accounts/{account_id}")
 def read_account(account_id: int, session: Session = Depends(get_session)):
     account = session.get(Account, account_id)

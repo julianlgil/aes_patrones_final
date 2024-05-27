@@ -17,34 +17,33 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8010:8010"
-      # - "8888:8888"
     volumes:
       - ./payments_manager:/app/payments_manager
     env_file:
       - .env
-    command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
+    command: ["uvicorn", "payments_manager.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
     depends_on:
       - db
     networks:
       - exam
 
-  #transactions_manager:
-  #  build: 
-  #    context: transactions_manager
-  #    dockerfile: Dockerfile
-  #  ports:
-  #    - "8010:8010"
-  #    # - "8888:8888"
-  #  volumes:
-  #    - ./transactions_manager:/app/transactions_manager
-  #  env_file:
-  #    - .env
-  #  command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
-  #  # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","transactions_manager.main:app","--host","0.0.0.0","--port","8013","--reload"] # debugpy
-  #  depends_on:
-  #    - db
-  #  networks:
-  #    - exam
+  # transactions_manager:
+  #   build: 
+  #     context: transactions_manager
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8020:8020"
+  #     # - "8888:8888"
+  #   volumes:
+  #     - ./transactions_manager:/app/transactions_manager
+  #   env_file:
+  #     - .env
+  #   command: ["uvicorn", "transactions_manager.main:app", "--host", "0.0.0.0", "--port", "8020", "--reload"]
+  #   # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","transactions_manager.main:app","--host","0.0.0.0","--port","8020","--reload"] # debugpy
+  #   depends_on:
+  #     - db
+  #   networks:
+  #     - exam
 
   accounts_microservice:
     build: 
@@ -52,13 +51,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8013:8013"
-      # - "8888:8888"
     volumes:
       - ./accounts_microservice:/app/accounts_microservice
     env_file:
       - .env
     command: ["uvicorn", "accounts_microservice.main:app", "--host", "0.0.0.0", "--port", "8013", "--reload"]
-    # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","accounts_microservice.main:app","--host","0.0.0.0","--port","8013","--reload"] # debugpy
     depends_on:
       - db
       - rabbitmq
@@ -71,28 +68,56 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8012:8012"
-      # - "8888:8888"
     volumes:
       - ./clients_microservice:/app/clients_microservice
     env_file:
       - .env
-    # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","clients_microservice.main:app","--host","0.0.0.0","--port","8012","--reload"] # debugpy
     command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8012", "--reload"]
     depends_on:
       - db
     networks:
       - exam
 
+  transactions_microservice:
+    build: 
+      context: transactions_microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8021:8021"
+    volumes:
+      - ./transactions_microservice:/app/transactions_microservice
+    env_file:
+      - .env
+    command: ["uvicorn", "transactions_microservice.main:app", "--host", "0.0.0.0", "--port", "8021", "--reload"]
+    depends_on:
+      - db
+    networks:
+      - exam
+
+  payments_dispatcher:
+    build: 
+      context: payments_dispatcher
+      dockerfile: Dockerfile
+    ports:
+      - "8011:8011"
+    volumes:
+      - ./payments_dispatcher:/app/payments_dispatcher
+    env_file:
+      - .env
+    command: ["uvicorn", "payments_dispatcher.main:app", "--host", "0.0.0.0", "--port", "8011", "--reload"]
+    depends_on:
+      - db
+    networks:
+      - exam
+  
   rabbitmq:
     image: rabbitmq:3.9.29-management-alpine
     container_name: rabbitmq
-    #ports:
-    #    - '15672:15672'
     volumes:
       - ./volumes/rabbitmq/data:/var/lib/rabbitmq/data
       - ./volumes/rabbitmq/log:/var/log/rabbitmq/
-    # logging:
-    #   driver: none
+    logging:
+      driver: none
     networks:
       - exam
 
