@@ -7,7 +7,7 @@ class BillBase(BaseModel):
 
 
 class Bill(BillBase):
-    id: str
+    bill_reference: str
     provider_id: str
     provider_account_id: str
     operation: str

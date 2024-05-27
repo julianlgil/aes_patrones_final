@@ -22,6 +22,7 @@ class Dispatcher:
 
     def do_request(self, provider_id: str, operation: str, payload: Optional[Dict]):
         provider = get_provider(provider_id=provider_id)
+        print(f"Provider: {provider}")
         webservice_type = provider['service_type']
         contract = provider['contract']
         template = provider['jsl']
@@ -38,4 +39,5 @@ class Dispatcher:
             "operation": operation,
             "provider_account_id": provider.get('account_id')
         })
+        print(f"Result: {result}")
         return Bill(**result)

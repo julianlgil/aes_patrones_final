@@ -7,7 +7,7 @@ app = FastAPI()
 
 
 @app.get("/bills/{bill_id}", response_model=Bill)
-def read_bill(bill_id: int):
+def read_bill(bill_id: str):
     bill = get_bill(bill_id)
     if bill is None:
         raise HTTPException(status_code=404, detail="Bill not found")
@@ -15,7 +15,7 @@ def read_bill(bill_id: int):
 
 
 @app.post("/bills/{bill_id}/pay", response_model=Bill)
-def pay_bill(bill_id: int):
+def pay_bill(bill_id: str):
     bill = get_bill(bill_id)
     if bill is None:
         raise HTTPException(status_code=404, detail="Bill not found")

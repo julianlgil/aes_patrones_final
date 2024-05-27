@@ -96,7 +96,53 @@ services:
     networks:
       - exam
 
+  providers_microservice:
+    build:
+      context: providers_microservice
+      dockerfile: Dockerfile
+    ports:
+      - "8014:8014"
+    volumes:
+      - ./providers_microservice:/app/providers_microservice
+    env_file:
+      - .env
+    command: ["uvicorn", "providers_microservice.app:app", "--host", "0.0.0.0", "--port", "8014", "--reload"]
+    depends_on:
+      - db
+    networks:
+      - exam
+
+  provider_mock:
+    build:
+      context: provider_mock
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./provider_mock:/app/provider_mock
+    env_file:
+      - .env
+    command: ["uvicorn", "provider_mock.app:app", "--host", "0.0.0.0", "--port", "9000", "--reload"]
+    networks:
+      - exam
+
+
+  dispatcher:
+    build:
+      context: providers_dispatcher
+      dockerfile: Dockerfile
+    ports:
+      - "8011:8011"
+    volumes:
+      - ./providers_dispatcher:/app/providers_dispatcher
+    env_file:
+      - .env
+    command: ["uvicorn", "providers_dispatcher.app:app", "--host", "0.0.0.0", "--port", "8011", "--reload"]
+    depends_on:
+      - providers_microservice
+      - provider_mock
+    networks:
+      - exam
 networks:
   exam:
     driver: bridge
-    #external: true

@@ -1,46 +1,23 @@
 {
   "get_bill_request": {
-    "path_operation": "FindPerson",
+    "method": "GET",
+    "path_operation": "/bills/" & $.bill_reference,
     "path_params": {},
-    "payload": {
-      "id": $.bill_reference
-    }
+    "payload": {}
 },
 "get_bill_response": {
   "bill_reference": $.id,
-  "success": $.name
+  "amount": $.amount,
+  "paid": $.paid
 },
 "pay_bill_request": {
-    "path_operation": "/objects",
-    "method": "POST",
-    "path_params": {},
-    "payload": {
-      "name": "Apple MacBook Pro 16",
-      "data": {
-        "year": $.payment_amount,
-        "price": $.payment_amount,
-        "CPU model": "Intel Core i9",
-        "Hard disk size": "1 TB",
-        "color": "silver"
-   }
+  "path_operation": "/bills/" & $.bill_reference & "/pay",
+  "method": "POST",
+  "path_params": {},
+  "payload": {}
 },
 "pay_bill_response": {
   "bill_reference": $.id,
-  "success": $.name
-},
-"update_bill": {
-    "path_operation": "/objects/" & $.bill_reference,
-    "method": "POST",
-    "path_params": {},
-    "payload": {
-      "name": "Apple MacBook Pro 16",
-      "data": {
-        "year": $.payment_amount,
-        "price": $.payment_amount,
-        "CPU model": "Intel Core i9",
-        "Hard disk size": "1 TB",
-        "color": "silver"
-   }
-}
+  "paid": $.paid
 }
 }

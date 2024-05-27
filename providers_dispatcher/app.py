@@ -1,3 +1,5 @@
+import traceback
+
 from fastapi import FastAPI, HTTPException
 
 from providers_dispatcher.dispatcher import Dispatcher
@@ -16,6 +18,7 @@ async def get_bill(bill_reference: str):
         }
         return dispatcher.do_request(provider_id, 'get_bill', json_data)
     except Exception as e:
+        traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -15,5 +15,5 @@ class BillUpdate(BaseModel):
 
 
 class Bill(BillBase):
-    id: int
+    id: str
 
