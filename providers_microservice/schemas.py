@@ -6,7 +6,7 @@ class ProviderBase(BaseModel):
     contract: str
     jsl: str
     service_type: str
-    account_id: int
+    account_id: str
 
 
 class ProviderCreate(ProviderBase):

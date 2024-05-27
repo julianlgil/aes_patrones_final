@@ -19,7 +19,7 @@ async def create_provider(provider: ProviderCreate, db: Session = Depends(get_db
 
 
 @app.get("/providers/{provider_id}", response_model=Provider)
-async def read_provider(provider_id: int, db: Session = Depends(get_db)):
+async def read_provider(provider_id: str, db: Session = Depends(get_db)):
     db_provider = get_provider(db, provider_id=provider_id)
     if db_provider is None:
         raise HTTPException(status_code=404, detail="Provider not found")
