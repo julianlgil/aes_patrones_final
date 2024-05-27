@@ -27,23 +27,23 @@ services:
     networks:
       - exam
 
-  # transactions_manager:
-  #   build: 
-  #     context: transactions_manager
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "8020:8020"
-  #     # - "8888:8888"
-  #   volumes:
-  #     - ./transactions_manager:/app/transactions_manager
-  #   env_file:
-  #     - .env
-  #   command: ["uvicorn", "transactions_manager.main:app", "--host", "0.0.0.0", "--port", "8020", "--reload"]
-  #   # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","transactions_manager.main:app","--host","0.0.0.0","--port","8020","--reload"] # debugpy
-  #   depends_on:
-  #     - db
-  #   networks:
-  #     - exam
+  transactions_manager:
+    build: 
+      context: transactions_manager
+      dockerfile: Dockerfile
+    ports:
+      - "8020:8020"
+      # - "8888:8888"
+    volumes:
+      - ./transactions_manager:/app/transactions_manager
+    env_file:
+      - .env
+    command: ["uvicorn", "transactions_manager.main:app", "--host", "0.0.0.0", "--port", "8020", "--reload"]
+    # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","transactions_manager.main:app","--host","0.0.0.0","--port","8020","--reload"] # debugpy
+    depends_on:
+      - db
+    networks:
+      - exam
 
   accounts_microservice:
     build: 

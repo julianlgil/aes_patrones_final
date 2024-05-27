@@ -14,8 +14,8 @@
             },
             "pathMappings": [
                 {
-                    "localRoot": "/home/checho/Documents/1.Especializacion_arq_soft/2.Software/parcial/aes_patrones_final/transactions_manager/",
-                    "remoteRoot": "/app/transactions_manager/"
+                    "localRoot": "/home/checho/Documents/1.Especializacion_arq_soft/2.Software/parcial/aes_patrones_final/",
+                    "remoteRoot": "/app/"
                 }
             ]
         }

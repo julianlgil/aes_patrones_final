@@ -4,6 +4,8 @@ import time
 
 import pika
 
+from .utils import proccess_payment
+
 
 class RabbitMQ:
     def __init__(self, amqp_url) -> None:
@@ -36,16 +38,22 @@ class RabbitCallback:
     def __init__(self, rabbit: RabbitMQ) -> None:
         self.rabbit = rabbit
 
-    def get_message(self, ch, method, properties, body):
+    def get_process_payment_message(self, ch, method, properties, body):
+        source = body.decode("utf-8")
+        source = json.loads(source)
+        time.sleep(2)
+        print("** ** ** QUEUE_TO_SEND_NOTIFICATIONS ** ** **", source)
+        errors = []
         try:
-            source = body.decode("utf-8")
-            source = json.loads(source)
-            time.sleep(2)
-            ch.basic_ack(delivery_tag=method.delivery_tag)
-            print("** ** ** QUEUE_TO_SEND_NOTIFICATIONS ** ** **", source)
-
+            data = proccess_payment(source)
+            send_rabbit_message(data)
         except Exception as e:
-            print(f"Error con el filtro: {e}")
+            errors.append(e)
+            print(f"Error con el filtro: {errors}")
+        if errors:
+            ch.basic_reject(delivery_tag=method.delivery_tag)
+        else:
+            ch.basic_ack(delivery_tag=method.delivery_tag)
 
 
 def send_rabbit_message(message: dict):
@@ -58,15 +66,15 @@ def send_rabbit_message(message: dict):
         message_str = message
     else:
         message_str = str(message)
-    queue_to_process_payments = os.getenv("QUEUE_TO_PROCESS_PAYMENTS")
-    rabbit.publish(queue_to_process_payments, message_str)
+    queue_to_send_notifications = os.getenv("QUEUE_TO_SEND_NOTIFICATIONS")
+    rabbit.publish(queue_to_send_notifications, message_str)
     rabbit.close_connection()
 
 
 async def subscribe_queue():
     rabbit = RabbitMQ(amqp_url=os.environ["AMQP_URL"])
-    source_queue = os.getenv("QUEUE_TO_SEND_NOTIFICATIONS")
-    rabbit.subscribe(source_queue, RabbitCallback(rabbit).get_message)
+    source_queue = os.getenv("QUEUE_TO_PROCESS_PAYMENTS")
+    rabbit.subscribe(source_queue, RabbitCallback(rabbit).get_process_payment_message)
 
 
 """
@@ -74,7 +82,7 @@ async def subscribe_queue():
 Para suscribirse a una cola
 rabbit = RabbitMQ(amqp_url=os.environ["AMQP_URL"])
 source_queue = os.getenv("QUEUE_TO_PROCESS_PAYMENTS")
-rabbit.subscribe(source_queue, RabbitCallback(rabbit).get_message)
+rabbit.subscribe(source_queue, RabbitCallback(rabbit).get_process_payment_message)
 
 Para publicar a una cola
 rabbit = RabbitMQ(amqp_url=os.environ["AMQP_URL"])
