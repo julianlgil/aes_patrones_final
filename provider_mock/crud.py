@@ -6,6 +6,9 @@ bills = [
     {"id": "12341", "amount": 100.0, "paid": False},
     {"id": "12342", "amount": 150.0, "paid": True},
     {"id": "12343", "amount": 200.0, "paid": False},
+    {"id": "98761", "amount": 100.0, "paid": False},
+    {"id": "98762", "amount": 150.0, "paid": True},
+    {"id": "98763", "amount": 200.0, "paid": False},
 ]
 
 
