@@ -5,6 +5,7 @@ docker compose exec crud_example bash -c "cd /app/crud_example/; pytest tests.py
 
 docker-compose exec db bash -c "PGPASSWORD=ojo psql -h db -p 5432 -U ojo -d ojo -c 'SELECT bill.id AS bill_id, bill.amount AS bill_amount FROM bill ;'"
 docker-compose exec db bash -c "PGPASSWORD=ojo psql -h db -p 5432 -U ojo -d ojo -c 'SELECT client.* FROM client ;'"
+docker-compose exec db bash -c "PGPASSWORD=ojo psql -h db -p 5432 -U ojo -d ojo -c 'SELECT account.* FROM account ;'"
 
 # Comandos para correr el proyecto:
 cd aes_patrones_final;
