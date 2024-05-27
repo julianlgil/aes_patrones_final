@@ -17,3 +17,4 @@ class MessageToProcessPayment(BaseModel):
     billId: int
     amount: Decimal
     client_account_id: int
+    provider_account_id: int

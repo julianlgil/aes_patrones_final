@@ -1,0 +1,4 @@
+sqlmodel==0.0.18
+psycopg2==2.9.9
+debugpy==1.8.1
+fastapi==0.88.0

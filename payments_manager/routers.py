@@ -18,7 +18,9 @@ def pay_bill(bill: PayBillRequest):
 
     client_id = account_data.get("client_id", None)
 
-    if bill_data.get("billId", 0) != bill.billId:
+    if client_id != bill.client_account_id:
+        raise HTTPException(status_code=404, detail="Client not found")
+    if int(bill_data.get("id", 0)) != bill.billId:
         raise HTTPException(status_code=404, detail="Bill not found")
     if not has_enough_money:
         raise HTTPException(status_code=404, detail="Not enough money")
@@ -27,6 +29,7 @@ def pay_bill(bill: PayBillRequest):
         billId=bill.billId,
         amount=amount_bill,
         client_account_id=client_id,
+        provider_account_id=bill_data.get("provider_account_id"),
     ).dict()
 
     # Publicar mensaje en la cola
@@ -38,5 +41,8 @@ def pay_bill(bill: PayBillRequest):
 @router.get("/bill/{billId}")
 def read_bill(billId: int):
     data_bill = query_bill(billId=billId)
-    data_bill = ReadBillResponse(**data_bill)
+
+    data_bill = ReadBillResponse(
+        **{"amount": data_bill.get("amount", None), "billId": data_bill.get("id", None)}
+    )
     return data_bill
