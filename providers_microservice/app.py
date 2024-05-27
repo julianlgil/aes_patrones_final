@@ -1,9 +1,11 @@
+import base64
+
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from providers_microservice import database
 from providers_microservice.database import Base, get_db
-from providers_microservice.repository import get_provider, get_providers
+from providers_microservice.repository import get_provider, get_providers, create_provider
 from providers_microservice.schemas import Provider, ProviderCreate
 
 app = FastAPI()
@@ -14,7 +16,8 @@ Base.metadata.create_all(bind=database.engine)
 
 # Dependency
 @app.post("/providers/", response_model=Provider)
-async def create_provider(provider: ProviderCreate, db: Session = Depends(get_db)):
+async def create(provider: ProviderCreate, db: Session = Depends(get_db)):
+    provider.jsl = base64.b64decode(provider.jsl).decode('utf-8')
     return create_provider(db=db, provider=provider)
 
 

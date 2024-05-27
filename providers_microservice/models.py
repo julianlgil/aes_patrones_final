@@ -10,4 +10,5 @@ class Provider(Base):
     contract = Column(String)
     jsl = Column(String)
     service_type = Column(String)
-    account_id = Column(String)
+    account_id = Column(Integer)
+    client_id = Column(Integer)

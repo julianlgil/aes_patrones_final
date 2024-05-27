@@ -137,6 +137,23 @@ services:
     networks:
       - exam
 
+  providers_manager:
+    build:
+      context: providers_manager
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./providers_manager:/app/providers_manager
+    env_file:
+      - .env
+    command: ["uvicorn", "providers_manager.app:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+    depends_on:
+      - providers_microservice
+      - accounts_microservice
+    networks:
+      - exam
+
   provider_mock:
     build:
       context: provider_mock
