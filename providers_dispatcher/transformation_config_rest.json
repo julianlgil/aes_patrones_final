@@ -1,16 +1,16 @@
 {
-  "get_invoice_request": {
+  "get_bill_request": {
     "path_operation": "FindPerson",
     "path_params": {},
     "payload": {
-      "id": $.invoice_reference
+      "id": $.bill_reference
     }
 },
-"get_invoice_response": {
-  "idFactura": $.id,
-  "exitoso": $.name
+"get_bill_response": {
+  "bill_reference": $.id,
+  "success": $.name
 },
-"pay_invoice_request": {
+"pay_bill_request": {
     "path_operation": "/objects",
     "method": "POST",
     "path_params": {},
@@ -24,12 +24,12 @@
         "color": "silver"
    }
 },
-"pay_invoice_response": {
-
-}
+"pay_bill_response": {
+  "bill_reference": $.id,
+  "success": $.name
 },
-"update_invoice": {
-    "path_operation": "/objects/" & $.invoice_reference,
+"update_bill": {
+    "path_operation": "/objects/" & $.bill_reference,
     "method": "POST",
     "path_params": {},
     "payload": {

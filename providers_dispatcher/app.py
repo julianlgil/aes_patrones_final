@@ -1,45 +1,38 @@
 from fastapi import FastAPI, HTTPException
 
 from providers_dispatcher.dispatcher import Dispatcher
+from providers_dispatcher.schemas import Bill, BillBase
 
 app = FastAPI()
 
-# Definimos el cliente HTTP
-client = httpx.Client()
 
-@app.get("/providers/invoice/{invoice_reference}")
-async def consume_api(invoice_reference: str):
+@app.get("/providers/bill/{bill_reference}", response_model=Bill)
+async def get_bill(bill_reference: str):
     try:
         dispatcher = Dispatcher()
-        provider_id = invoice_reference[0:3]
+        provider_id = bill_reference[0:4]
         json_data = {
-            "invoice_reference": invoice_reference
+            "bill_reference": bill_reference
         }
-        dispatcher.do_request(provider_id, 'get_invoice', json_data)
-    except httpx.HTTPStatusError as exc:
-        raise HTTPException(status_code=exc.response.status_code, detail=str(exc))
+        return dispatcher.do_request(provider_id, 'get_bill', json_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    # Retornamos la respuesta de la API externa
-    return response.json()
 
-
-@app.post("/providers/payment_invoice")
-async def consume_api(endpoint: str):
+@app.post("/providers/bill/{bill_reference}", response_model=Bill)
+async def pay_bill(bill_reference: str, payment: BillBase):
     try:
-        # Realizamos una solicitud GET a la API externa
-        response = client.get(endpoint)
-        response.raise_for_status()  # Verifica si hubo algún error en la solicitud
-    except httpx.HTTPStatusError as exc:
-        raise HTTPException(status_code=exc.response.status_code, detail=str(exc))
+        dispatcher = Dispatcher()
+        provider_id = bill_reference[0:4]
+        json_data = {
+            "bill_reference": bill_reference,
+            "payment_amount": payment.amount,
+            "paid": payment.paid
+        }
+        return dispatcher.do_request(provider_id, 'pay_bill', json_data)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-    # Retornamos la respuesta de la API externa
-    return response.json()
-
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8011)

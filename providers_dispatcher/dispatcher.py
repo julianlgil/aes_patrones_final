@@ -4,27 +4,12 @@ from typing import Dict, Optional
 import requests
 
 from providers_dispatcher.jslt.jslt_jsonata import transform_json
+from providers_dispatcher.schemas import Bill
 from providers_dispatcher.web_service_clients.models import RequestInfo
 from providers_dispatcher.web_service_clients.supported_webservice_clients import SupportedWebserviceClients
 
 
 def get_provider(provider_id) -> Dict:
-    # with open("transformation_config.json") as f:
-    #     transform_config = f.read()
-    # with open("transformation_config_rest.json") as f:
-    #     transform_config_rest = f.read()
-    # if provider_id == 2:
-    #     return {
-    #         'service_type': 'SOAP',
-    #         'contract': 'https://www.crcind.com/csp/samples/SOAP.Demo.CLS?WSDL=1',
-    #         'template': transform_config
-    #     }
-    # else:
-    #     return {
-    #         'service_type': 'REST',
-    #         'contract': 'https://api.restful-api.dev',
-    #         'template': transform_config_rest
-    #     }
     url = os.getenv('PROVIDERS_HOST') + provider_id
     response = requests.get(url)
     return response.json()
@@ -39,7 +24,7 @@ class Dispatcher:
         provider = get_provider(provider_id=provider_id)
         webservice_type = provider['service_type']
         contract = provider['contract']
-        template = provider['template']
+        template = provider['jsl']
         request_data = transform_json(input_json=payload, template=template)
         client = SupportedWebserviceClients[webservice_type].get_client_instance(
             contract=contract,
@@ -47,11 +32,10 @@ class Dispatcher:
         response = client.do_request(operation=operation, request_info=RequestInfo.parse_obj(request_data.get(
             f'{operation}_request')))
         transformed_response = transform_json(input_json=response, template=template)
-        return transformed_response.get(f'{operation}_response')
-
-
-json_data = {
-    "invoice_reference": 7,
-    "payment_amount": 10000
-}
-
+        result = transformed_response.get(f'{operation}_response')
+        result.update({
+            "provider_id": provider_id,
+            "operation": operation,
+            "provider_account_id": provider.get('account_id')
+        })
+        return Bill(**result)
