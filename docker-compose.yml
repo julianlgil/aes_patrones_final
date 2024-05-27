@@ -28,17 +28,37 @@ services:
     networks:
       - exam
 
+  #transactions_manager:
+  #  build: 
+  #    context: transactions_manager
+  #    dockerfile: Dockerfile
+  #  ports:
+  #    - "8010:8010"
+  #    # - "8888:8888"
+  #  volumes:
+  #    - ./transactions_manager:/app/transactions_manager
+  #  env_file:
+  #    - .env
+  #  command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]
+  #  # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","transactions_manager.main:app","--host","0.0.0.0","--port","8013","--reload"] # debugpy
+  #  depends_on:
+  #    - db
+  #  networks:
+  #    - exam
+
   accounts_microservice:
     build: 
       context: accounts_microservice
       dockerfile: Dockerfile
     ports:
       - "8013:8013"
+      # - "8888:8888"
     volumes:
       - ./accounts_microservice:/app/accounts_microservice
     env_file:
       - .env
     command: ["uvicorn", "accounts_microservice.main:app", "--host", "0.0.0.0", "--port", "8013", "--reload"]
+    # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","accounts_microservice.main:app","--host","0.0.0.0","--port","8013","--reload"] # debugpy
     depends_on:
       - db
       - rabbitmq
@@ -51,18 +71,17 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8012:8012"
-      - "8888:8888"
+      # - "8888:8888"
     volumes:
       - ./clients_microservice:/app/clients_microservice
     env_file:
       - .env
-    command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","clients_microservice.main:app","--host","0.0.0.0","--port","8012","--reload"] # debugpy
-    # command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8012", "--reload"]
+    # command: ["python","-m","debugpy","--listen","0.0.0.0:8888","--wait-for-client","-m","uvicorn","clients_microservice.main:app","--host","0.0.0.0","--port","8012","--reload"] # debugpy
+    command: ["uvicorn", "clients_microservice.main:app", "--host", "0.0.0.0", "--port", "8012", "--reload"]
     depends_on:
       - db
     networks:
       - exam
-
 
   payments_dispatcher:
     build: 

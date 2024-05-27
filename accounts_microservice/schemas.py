@@ -1,16 +1,18 @@
 from decimal import Decimal
+from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, constr
 
 
 class ReadAccountResponse(BaseModel):
     client_id: int
     account_id: int
     balance: Decimal = Field(..., gte=0)
+    state: str
 
 
 class BalanceRequest(BaseModel):
-    action: str = Field(..., regex="^(add|subtract)$")
+    action: str = Field(..., regex="^(add|substract)$")
     amount: Decimal
 
 
@@ -19,8 +21,8 @@ class AccountAction(BaseModel):
 
 
 class UpdateAccountRequest(BaseModel):
-    balance: BalanceRequest
-    state: AccountAction
+    balance: Optional[BalanceRequest]
+    state: Optional[constr(regex="^(block|unblock)$")] = None
 
 
 class UpdateAccountResponse(BaseModel):
