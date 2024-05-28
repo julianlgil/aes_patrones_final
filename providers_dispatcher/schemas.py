@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class BillBase(BaseModel):
-    amount: float
+    amount: float | None = None
     paid: bool
 
 

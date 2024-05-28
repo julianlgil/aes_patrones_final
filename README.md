@@ -1,5 +1,7 @@
 # aes_patrones_final
 # Crear Bases de datos
+cd aes_patrones_final;
+docker compose up -d db;
 docker compose exec db bash -c "PGPASSWORD=aes psql -h db -p 5432 -U postgres -d aes_clients -c 'CREATE DATABASE aes_data;'";
 docker compose exec db bash -c "PGPASSWORD=aes psql -h db -p 5432 -U postgres -d aes_clients -c 'CREATE DATABASE aes_accounts;'";
 docker compose exec db bash -c "PGPASSWORD=aes psql -h db -p 5432 -U postgres -d aes_clients -c 'CREATE DATABASE aes_transactions;'";
