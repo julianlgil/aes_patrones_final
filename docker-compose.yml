@@ -78,7 +78,6 @@ services:
     networks:
       - exam
 
-
   transactions_microservice:
     build: 
       context: transactions_microservice
@@ -168,6 +167,23 @@ services:
     depends_on:
       - providers_microservice
       - provider_mock
+    networks:
+      - exam
+
+  notifications_manager:
+    build:
+      context: notifications_manager
+      dockerfile: Dockerfile
+    ports:
+      - "8022:8022"
+    volumes:
+      - ./notifications_manager:/app/notifications_manager
+    env_file:
+      - .env
+    command: ["uvicorn", "notifications_manager.app:app", "--host", "0.0.0.0", "--port", "8022", "--reload"]
+    depends_on:
+      - db
+      - rabbitmq
     networks:
       - exam
 networks:
