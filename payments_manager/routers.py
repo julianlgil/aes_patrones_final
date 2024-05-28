@@ -20,7 +20,7 @@ def pay_bill(bill: PayBillRequest):
 
     if client_id != bill.client_account_id:
         raise HTTPException(status_code=404, detail="Client not found")
-    if int(bill_data.get("id", 0)) != bill.billId:
+    if int(bill_data.get("bill_reference", 0)) != bill.billId:
         raise HTTPException(status_code=404, detail="Bill not found")
     if not has_enough_money:
         raise HTTPException(status_code=404, detail="Not enough money")
@@ -43,6 +43,6 @@ def read_bill(billId: int):
     data_bill = query_bill(billId=billId)
 
     data_bill = ReadBillResponse(
-        **{"amount": data_bill.get("amount", None), "billId": data_bill.get("id", None)}
+        **{"amount": data_bill.get("amount", None), "billId": data_bill.get("bill_reference", None)}
     )
     return data_bill
