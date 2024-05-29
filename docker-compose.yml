@@ -43,6 +43,22 @@ services:
     networks:
       - exam
 
+  telegram_api:
+    build: 
+      context: telegram_api
+      dockerfile: Dockerfile
+    ports:
+      - "8023:8023"
+    volumes:
+      - ./telegram_api:/app/telegram_api
+    env_file:
+      - .env
+    command: ["uvicorn", "telegram_api.main:app", "--host", "0.0.0.0", "--port", "8023", "--reload"]
+    stdin_open: true
+    tty: true
+    networks:
+      - exam
+
   transactions_manager:
     build: 
       context: transactions_manager
