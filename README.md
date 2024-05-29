@@ -10,6 +10,15 @@ docker compose exec db bash -c "PGPASSWORD=aes psql -h db -p 5432 -U postgres -d
 # Comandos para correr el proyecto:
 cd aes_patrones_final;
 sudo chmod 777 volumes -R;
-docker compose down; 
-docker compose up --build -d;
+docker compose down notifications_manager; 
+docker compose up --build -d notifications_manager;
+docker compose logs -f --tail 1 notifications_manager;
+
 docker compose logs -f --tail 1
+
+sudo chmod 777 volumes -R;
+docker compose down ; 
+docker compose up --build -d ;
+docker compose logs -f --tail 1 ;
+
+45257
