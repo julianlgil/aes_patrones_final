@@ -63,12 +63,6 @@ def send_rabbit_message(message: dict):
     rabbit.close_connection()
 
 
-async def subscribe_queue():
-    rabbit = RabbitMQ(amqp_url=os.environ["AMQP_URL"])
-    source_queue = os.getenv("QUEUE_TO_SEND_NOTIFICATIONS")
-    rabbit.subscribe(source_queue, RabbitCallback(rabbit).get_message)
-
-
 """
 
 Para suscribirse a una cola
