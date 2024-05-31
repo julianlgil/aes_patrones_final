@@ -20,6 +20,9 @@ def pay_bill(bill: PayBillRequest):
 
     if client_id != bill.client_account_id:
         raise HTTPException(status_code=404, detail="Client not found")
+
+    if bill_data.get("paid"):
+        raise HTTPException(status_code=404, detail="Bill was paid")
     if int(bill_data.get("bill_reference", 0)) != bill.billId:
         raise HTTPException(status_code=404, detail="Bill not found")
     if not has_enough_money:
